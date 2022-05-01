@@ -4,7 +4,8 @@ from selenium.webdriver.common.by import By
 import time
 import pandas as pd
 from tqdm import tqdm
-import datetime
+import warnings
+warnings.simplefilter(action='ignore', category=FutureWarning)
 pd.set_option('display.max_columns', None)
 
 gecko_path = '/usr/local/bin/geckodriver'
@@ -16,12 +17,14 @@ driver = webdriver.Firefox(options = options, service=ser)
 url = 'https://www.basketball-reference.com/players/'
 
 limit_to_100 = True
+save_output_to_csv = False
+
 counter = 0
 
-d = pd.DataFrame({'nameAndSurname':[], 'position':[], 'shoots':[], 'height':[],
-                  'weight':[], 'birthYear':[], 'games':[], 'points':[],
-                  'totalRebounds':[],'assists':[],'fieldGoalPercentage':[],'threeFieldGoal':[],
-                  'freeThrowPercentage':[],'effectiveFieldGoal':[],'playerEfficiency':[],'winShares':[]})
+d = pd.DataFrame({'nameAndSurname':[],
+                  # 'position':[], 'shoots':[], 'height':[], 'weight':[], 'birthYear':[], <---- removed columns
+                  'games':[], 'points':[], 'totalRebounds':[], 'assists':[], 'fieldGoalPercentage':[],
+                  'threeFieldGoal':[], 'freeThrowPercentage':[],'effectiveFieldGoal':[],'playerEfficiency':[],'winShares':[]})
 
 driver.get(url)
 
@@ -35,17 +38,17 @@ for _ in letters:
     letters_href_list.append(_.get_attribute('href'))
 
 players_href_list = []
-for letter in tqdm(letters_href_list):
+for letter in tqdm(letters_href_list, desc='Letters'):
     driver.get(letter)
     time.sleep(1)
     players_list = driver.find_element(By.XPATH, '//*[@id="players"]/tbody').find_elements(By.XPATH, './/tr/th/a[@href]')
-    for _ in players_list[:10]: #20
+    for _ in players_list[:20]:
         if limit_to_100:
-            if counter < 5: #100
+            if counter < 100:
                 players_href_list.append(_.get_attribute('href'))
                 counter += 1
             else:
-                print("Scraper reached the limit of 100 websites!\n")
+                print("Scraper reached the limit of 100 websites!")
                 break
         else:
             players_href_list.append(_.get_attribute('href'))
@@ -53,7 +56,7 @@ for letter in tqdm(letters_href_list):
         continue
     break
 
-for player_href in players_href_list:
+for player_href in tqdm(players_href_list, desc='Players'):
     driver.get(player_href)
     time.sleep(1)
 
@@ -76,7 +79,7 @@ for player_href in players_href_list:
 
     #height =
     #weight =
-    #birthYear
+    #birthYear =
 
     try:
         games = driver.find_element(By.XPATH, '//*[@data-tip="Games"]/following-sibling::p[2]').text
@@ -125,20 +128,20 @@ for player_href in players_href_list:
 
     try:
         winShares = driver.find_element(By.XPATH, "//*[contains(@data-tip, 'Win Shares')]/following-sibling::p[2]").text
-        print(winShares)
     except:
         winShares = ''
 
-
-    baller = {'nameAndSurname': nameAndSurname, 'position': position, 'shoots': shoots, 'height': height, 'weight': weight,
-              'birthYear': birthYear, 'games': games, 'points': points,
-              'totalRebounds': totalRebounds, 'assists': assists, 'fieldGoalPercentage': fieldGoalPercentage,
+    baller = {'nameAndSurname': nameAndSurname,
+              # 'position': position, 'shoots': shoots, 'height': height, 'weight': weight, 'birthYear': birthYear, <---- removed columns
+              'games': games, 'points': points, 'totalRebounds': totalRebounds, 'assists': assists, 'fieldGoalPercentage': fieldGoalPercentage,
               'threeFieldGoal': threeFieldGoal, 'freeThrowPercentage': freeThrowPercentage,
               'effectiveFieldGoal': effectiveFieldGoal, 'playerEfficiency': playerEfficiency, 'winShares': winShares}
 
     d = d.append(baller, ignore_index=True)
 
-
-print(d)
-
 driver.quit()
+
+if limit_to_100 and save_output_to_csv:
+    d.to_csv('ballers_small.csv', index=False)
+elif save_output_to_csv:
+    d.to_csv('ballers_big.csv', index=False)
