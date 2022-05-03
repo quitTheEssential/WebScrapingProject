@@ -9,11 +9,12 @@ html = request.urlopen(url)
 bs = BS(html.read(), 'html.parser')
 
 limit_to_100 = True
+save_output_to_csv = True
 counter = 0
 
-d = pd.DataFrame({'nameAndSurname':[], 'position':[], 'shoots':[], 'height':[],
-                  'weight':[], 'birthYear':[], 'games':[], 'points':[],
-                  'totalRebounds':[],'assists':[],'fieldGoalPercentage':[],'threeFieldGoal':[],
+d = pd.DataFrame({'nameAndSurname':[],
+                  # 'position':[], 'shoots':[], 'height':[],'weight':[], 'birthYear':[], <----- removed columns
+                  'games':[], 'points':[],'totalRebounds':[],'assists':[],'fieldGoalPercentage':[],'threeFieldGoal':[],
                   'freeThrowPercentage':[],'effectiveFieldGoal':[],'playerEfficiency':[],'winShares':[]})
 
 alphabet = bs.find('div',{'id':'all_alphabet'}).find(text=lambda text: isinstance(text, Comment)).findAllNext('a', {'href':
@@ -28,7 +29,7 @@ for letter in letters_href_list:
     players_list = bs.find('table',{'id':'players'}).find('tbody').find_all('a',{'href':re.compile('\/players\/[a-z]+\/')})
     for link in players_list[:20]:
         if limit_to_100:
-            if counter < 10:
+            if counter < 100:
                 players_href_list.append('https://www.basketball-reference.com' + link['href'])
                 counter += 1
             else:
@@ -44,10 +45,10 @@ for player in players_href_list:
     except:
         nameAndSurname = ''
 
-    try:
-        position = bs.find('div',{'id':'meta'}).find('div',{'itemtype':'https://schema.org/Person'}).find_all('p')[5].text.strip()
-    except:
-        position = ''
+    # try:
+    #     position = bs.find('div',{'id':'meta'}).find('div',{'itemtype':'https://schema.org/Person'}).find_all('p')[5].text.strip()
+    # except:
+    #     position = ''
 
     try:
         games = bs.find('div',{'id':'info'}).find('div',{'class':'p1'}).find_all('div')[0].find_all('p')[1].text
@@ -98,15 +99,18 @@ for player in players_href_list:
         winShares = bs.find('div',{'id':'info'}).find('div',{'class':'p3'}).find_all('div')[1].find_all('p')[1].text
     except:
         winShares = ''
-        
-    # 'position':position,'shoots': shoots, 'height': height,
-    # 'weight': weight, 'birthYear': birthYear,
-    baller = {'nameAndSurname':nameAndSurname, 'games':games, 'points':points,
-              'totalRebounds':totalRebounds,'assists':assists,'fieldGoalPercentage':fieldGoalPercentage,
+
+
+    baller = {'nameAndSurname':nameAndSurname,
+            # 'position':position,'shoots': shoots, 'height': height,'weight': weight, 'birthYear': birthYear, <----- removed columns
+              'games':games, 'points':points,'totalRebounds':totalRebounds,'assists':assists,'fieldGoalPercentage':fieldGoalPercentage,
               'threeFieldGoal':threeFieldGoal,'freeThrowPercentage':freeThrowPercentage,
               'effectiveFieldGoal':effectiveFieldGoal,'playerEfficiency':playerEfficiency,'winShares':winShares}
 
     d = d.append(baller, ignore_index=True)
 
-print(d)
+if limit_to_100 and save_output_to_csv:
+    d.to_csv('ballers_small.csv', index = False)
+elif save_output_to_csv:
+    d.to_csv('ballers_big.csv', index = False)
 
