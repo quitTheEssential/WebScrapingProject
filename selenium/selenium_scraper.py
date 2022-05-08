@@ -38,10 +38,10 @@ for _ in letters:
     letters_href_list.append(_.get_attribute('href'))
 
 players_href_list = []
-for letter in tqdm(letters_href_list, desc='Letters'):
+for letter in tqdm(letters_href_list, desc='Getting list of players'):
     driver.get(letter)
     time.sleep(1)
-    players_list = driver.find_element(By.XPATH, '//*[@id="players"]/tbody').find_elements(By.XPATH, './/tr/th/a[@href]')
+    players_list = driver.find_element(By.XPATH, '//*[@id="players"]/tbody').find_elements(By.XPATH, './/tr/th//a[@href]')
     for _ in players_list[:20]:
         if limit_to_100:
             if counter < 100:
@@ -56,12 +56,12 @@ for letter in tqdm(letters_href_list, desc='Letters'):
         continue
     break
 
-for player_href in tqdm(players_href_list, desc='Players'):
+for player_href in tqdm(players_href_list, desc='Getting info about players'):
     driver.get(player_href)
     time.sleep(1)
 
     try:
-        nameAndSurname = driver.find_element(By.XPATH, '//*[@itemprop="name"]/span').text
+        nameAndSurname = driver.find_element(By.XPATH, '//h1/span').text
     except:
         nameAndSurname = ''
 
