@@ -3,7 +3,7 @@
 ## Instruction how to run our scrapers
 ### Beautiful Soup (on Windows)
 1. Install BeautifulSoup
-    * Open Terminal by pressing <kbd>Windows</kbd> + <kbd>R</kbd> and then write cmd.
+    * Open Terminal by pressing <kbd>Windows</kbd> + <kbd>R</kbd> and then write `cmd`.
     * Run `pip install beautifulsoup4` command.
 2. Install other required packages (`pandas` for data manipulation and `tqdm` to show progress bar)
     * Run `pip install pandas` command.
