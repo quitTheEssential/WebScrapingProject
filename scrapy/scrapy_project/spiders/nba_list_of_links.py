@@ -5,7 +5,7 @@ import scrapy
 class Link(scrapy.Item):
     link = scrapy.Field()
 
-
+# First spider fetches links to sites with particular letters
 class LinkListsSpider(scrapy.Spider):
     name = 'nba_list_of_links'
     allowed_domains = ['basketball-reference.com/']

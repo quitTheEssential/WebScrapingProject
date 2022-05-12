@@ -22,8 +22,7 @@ class Player(scrapy.Item):
     winShares             = scrapy.Field()
 
 
-
-
+# Third spider fetches actual statistics for particular players
 class LinksSpider(scrapy.Spider):
     name = 'players'
     allowed_domains = ['basketball-reference.com/']
