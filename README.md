@@ -9,7 +9,7 @@
     * Run `pip install pandas` command.
     * Run `pip install tqdm` command.
 3. Run the scraper
-    * Open Terminal by pressing <kbd>Windows</kbd> + <kbd>R</kbd> and then write cmd.
+    * Open Terminal by pressing <kbd>Windows</kbd> + <kbd>R</kbd> and then write `cmd`.
     * Navigate to the directory where the script is located using the `cd` command.
     * Run `python bs_scraper.py` command.
 
