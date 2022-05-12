@@ -12,6 +12,18 @@
     * Open Terminal by pressing <kbd>Windows</kbd> + <kbd>R</kbd> and then write cmd.
     * Navigate to the directory where the script is located using the `cd` command.
     * Run `python bs_scraper.py` command.
+
+### Scrapy (on MacOS)
+1. Install Scrapy
+   * Open terminal with <kbd>Command</kbd> + <kbd>Space</kbd> and type `terminal`.
+   * Run `pip install scrapy`
+2. Run the three spiders
+   * Navigate to the proper directory, using command `cd` followed by path.
+   * Open the Scrapy project directory, using `cd scrapy_project`
+   * Run first spider with command `scrapy crawl nba_list_of_links -o list_of_links.csv`
+   * Run second spider with command `scrapy crawl nba_players_links -o players_links.csv`
+   * Run third spider with command `scrapy crawl players -o ballers_big.csv`
+
 ### Selenium (in Ubuntu)
 1. Install GeckoDriver
     * Open Terminal by pressing <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>. 
@@ -32,5 +44,3 @@
     * Open Terminal by pressing <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>T</kbd>.
     * Navigate to the directory where the script is located using the `cd` command.
     * Run `python3 selenium_scraper.py` command.
-### Scrapy
-...
