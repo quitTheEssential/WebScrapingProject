@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 
-limit_to_100 = True
+limit_to_100 = False
 if limit_to_100:
     limiter = 101
 else:

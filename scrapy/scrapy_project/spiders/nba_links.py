@@ -12,10 +12,10 @@ class LinksSpider(scrapy.Spider):
             start_urls = [url.strip() for url in f.readlines()][1:]
     except:
         start_urls = []
-    #start_urls = ['https://www.basketball-reference.com/players/a/']
+    #start_urls = ['https://www.basketball-reference.com/players/u/']
     def parse(self, response):
         print(response)
-        xpath = '//a[re:test(@href, "\/players\/[a-zA-Z]\/[a-zA-Z\d]*.html*")]//@href'
+        xpath = './/tbody/tr/th//a[re:test(@href, "\/players\/[a-zA-Z]\/[a-zA-Z\d]*.html*")]//@href'
         selection = response.xpath(xpath)[0:20]
         for s in selection:
             l = Link()
